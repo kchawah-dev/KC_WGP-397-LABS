@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "PlayerInputActions",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "2c5e2c62-facf-496f-bea3-f8407123b23b",
+            "actions": [
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "037ab218-70d8-4cfd-ae37-d2d1b1de1545",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4983eb80-deb2-4a9b-8b98-02666759d5b1",
+                    "path": "P",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

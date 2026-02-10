@@ -39,4 +39,9 @@ public class PlayerController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
+
+    public void SetCameraActive(bool active)
+    {
+        enabled = active;
+    }
 }
