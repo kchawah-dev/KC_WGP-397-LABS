@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Mobile Input")]
+    public Joystick joystick;
+
     [Header("Movement")]
     public float speed = 5f;
     public float jumpForce = 5f;
@@ -43,20 +46,54 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleMouseLook();
-        HandleJump();
     }
 
     void HandleMovement()
     {
-        Vector3 move = new Vector3(input.Horizontal, 0, input.Vertical);
+        float moveX = 0f;
+        float moveZ = 0f;
+
+        // If joystick exists (mobile)
+        if (joystick != null)
+        {
+            moveX = joystick.Horizontal;
+            moveZ = joystick.Vertical;
+        }
+        else // fallback to keyboard
+        {
+            moveX = input.Horizontal;
+            moveZ = input.Vertical;
+        }
+    
+        Vector3 move = new Vector3(moveX, 0, moveZ);
         Vector3 moveDirection = transform.TransformDirection(move);
+
         rb.MovePosition(rb.position + moveDirection * speed * Time.deltaTime);
     }
 
+    float touchX;
+    float touchY;
+
     void HandleMouseLook()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = 0f;
+        float mouseY = 0f;
+
+    #if UNITY_EDITOR
+        mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+    #else
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                mouseX = touch.deltaPosition.x * mouseSensitivity * 0.01f * Time.deltaTime;
+                mouseY = touch.deltaPosition.y * mouseSensitivity * 0.01f * Time.deltaTime;
+            }
+        }
+    #endif
 
         transform.Rotate(Vector3.up * mouseX);
 
@@ -65,13 +102,16 @@ public class PlayerController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
-
-    void HandleJump()
+    
+    public void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            audioSource.PlayOneShot(jumpSound);
+
+            if (audioSource != null && jumpSound != null)
+                audioSource.PlayOneShot(jumpSound);
+
             isGrounded = false;
         }
     }
@@ -94,5 +134,16 @@ public class PlayerController : MonoBehaviour
     public void SetCameraActive(bool active)
     {
         enabled = active;
+    }
+
+    public void HandleJump()
+    {
+        Jump();
+    }
+
+
+    public void HandleShoot()
+    {
+        Debug.Log("Shoot button pressed");
     }
 }

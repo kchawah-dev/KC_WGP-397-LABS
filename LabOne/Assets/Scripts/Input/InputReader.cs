@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    public float Horizontal => Input.GetAxis("Horizontal");
-    public float Vertical => Input.GetAxis("Vertical");
+    public Joystick movementJoystick;
+
+    public float Horizontal => movementJoystick.Horizontal;
+    public float Vertical => movementJoystick.Vertical;
 }
